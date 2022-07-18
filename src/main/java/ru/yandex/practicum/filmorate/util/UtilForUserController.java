@@ -1,5 +1,7 @@
 package ru.yandex.practicum.filmorate.util;
 
+import ru.yandex.practicum.filmorate.model.User;
+
 import java.util.HashMap;
 
 public class UtilForUserController {
@@ -11,5 +13,4 @@ public class UtilForUserController {
         }
         return id;
     }
-
 }

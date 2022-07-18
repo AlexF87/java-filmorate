@@ -5,7 +5,7 @@ import lombok.Data;
 import java.time.LocalDate;
 
 @Data
-public class Film {
+public class Film extends AbstactModel {
 
     Long id;
     String name;

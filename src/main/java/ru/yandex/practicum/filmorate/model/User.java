@@ -5,7 +5,7 @@ import lombok.Data;
 import java.time.LocalDate;
 
 @Data
-public class User {
+public class User extends AbstactModel {
 
     Long id;
     String email;

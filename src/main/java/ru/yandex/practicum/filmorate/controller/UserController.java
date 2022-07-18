@@ -15,16 +15,17 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/users")
-public class UserController {
+public class UserController extends AbstractController <User> {
 
     //Создаем логер
     private final static Logger log = LoggerFactory.getLogger(UserController.class);
     public HashMap<Long, User> users = new HashMap<>();
 
     //Создание пользователя
+    @Override
     @PostMapping
     public User create(@Valid @RequestBody User user) {
-        validateUser(user);
+        validateObj(user);
         Long id = UtilForUserController.createId(users);
         user.setId(id);
         users.put(id, user);
@@ -33,6 +34,7 @@ public class UserController {
     }
 
     //Обновление пользователя
+    @Override
     @PutMapping
     public User update(@Valid @RequestBody User user) {
         if (users.containsKey(user.getId())) {
@@ -49,14 +51,15 @@ public class UserController {
     }
 
     //Получение списка всех пользователей
+    @Override
     @GetMapping
-    public List<User> getAllUsers() {
+    public List<User> getAllRecords() {
         List<User> list = new ArrayList<User>(users.values());
         return list;
     }
 
     //Валидация
-    void validateUser(User user) {
+    void validateObj(User user) {
         if (user.getEmail().isBlank() || !user.getEmail().contains("@")) {
             throw new ValidationException("Не правильный email");
         }
