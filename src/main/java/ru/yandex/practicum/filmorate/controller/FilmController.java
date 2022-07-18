@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-
+@Validated
 @RestController
 @RequestMapping("/films")
 public class FilmController extends  AbstractController <Film> {
@@ -62,7 +62,7 @@ public class FilmController extends  AbstractController <Film> {
 
     //Валидация
     @Override
-     void validateObj(Film film) {
+    void validateObj(Film film) {
         if (film.getName().isBlank()) {
             throw new ValidationException("Пустое имя");
         }

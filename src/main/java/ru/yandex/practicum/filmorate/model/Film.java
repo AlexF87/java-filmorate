@@ -8,7 +8,7 @@ import java.time.LocalDate;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Film extends AbstactModel {
+public class Film {
 
     Long id;
     String name;

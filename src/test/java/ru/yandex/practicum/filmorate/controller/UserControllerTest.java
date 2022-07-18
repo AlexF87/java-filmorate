@@ -14,7 +14,7 @@ class UserControllerTest {
     void validateFailEmail() {
         UserController userController = new UserController();
         User user = new User();
-        user.setEmail("asd.ru");
+        user.setEmail("");
         user.setLogin("ok");
         user.setName("qwe");
         user.setBirthday(LocalDate.of(1999, 01, 01));
