@@ -18,7 +18,7 @@ class FilmControllerTest {
         film.setDescription("asd");
         film.setReleaseDate(LocalDate.of(2001, 01, 10));
         film.setDuration(10);
-        assertThrows(ValidationException.class, () -> filmController.validateFilm(film));
+        assertThrows(ValidationException.class, () -> filmController.validateObj(film));
     }
 
     @Test
@@ -32,7 +32,7 @@ class FilmControllerTest {
                 "стал кандидатом Коломбани.");
         film.setReleaseDate(LocalDate.of(2001, 01, 10));
         film.setDuration(10);
-        assertThrows(ValidationException.class, () -> filmController.validateFilm(film));
+        assertThrows(ValidationException.class, () -> filmController.validateObj(film));
     }
 
     @Test
@@ -43,7 +43,7 @@ class FilmControllerTest {
         film.setDescription("asd");
         film.setReleaseDate(LocalDate.of(1895, 12, 27));
         film.setDuration(10);
-        assertThrows(ValidationException.class, () -> filmController.validateFilm(film));
+        assertThrows(ValidationException.class, () -> filmController.validateObj(film));
     }
 
     @Test
@@ -54,6 +54,6 @@ class FilmControllerTest {
         film.setDescription("asd");
         film.setReleaseDate(LocalDate.of(1995, 12, 27));
         film.setDuration(-10);
-        assertThrows(ValidationException.class, () -> filmController.validateFilm(film));
+        assertThrows(ValidationException.class, () -> filmController.validateObj(film));
     }
 }

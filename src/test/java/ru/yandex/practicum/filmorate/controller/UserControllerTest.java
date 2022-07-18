@@ -19,7 +19,7 @@ class UserControllerTest {
         user.setName("qwe");
         user.setBirthday(LocalDate.of(1999, 01, 01));
 
-        assertThrows(ValidationException.class, () -> userController.validateUser(user));
+        assertThrows(ValidationException.class, () -> userController.validateObj(user));
     }
 
     @Test
@@ -31,7 +31,7 @@ class UserControllerTest {
         user.setName("qwe");
         user.setBirthday(LocalDate.of(1999, 01, 01));
 
-        assertThrows(ValidationException.class, () -> userController.validateUser(user));
+        assertThrows(ValidationException.class, () -> userController.validateObj(user));
     }
 
     @Test
@@ -42,7 +42,7 @@ class UserControllerTest {
         user.setLogin("AAA");
         user.setName("");
         user.setBirthday(LocalDate.of(1999, 01, 01));
-        userController.validateUser(user);
+        userController.validateObj(user);
 
         assertEquals("AAA", user.getName());
     }
@@ -56,6 +56,6 @@ class UserControllerTest {
         user.setName("qwe");
         user.setBirthday(LocalDate.now().plusDays(1));
 
-        assertThrows(ValidationException.class, () -> userController.validateUser(user));
+        assertThrows(ValidationException.class, () -> userController.validateObj(user));
     }
 }

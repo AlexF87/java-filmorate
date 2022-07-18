@@ -17,17 +17,17 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/films")
-@Validated
-public class FilmController {
+public class FilmController extends  AbstractController <Film> {
 
     //Создаем логер
     private final static Logger log = LoggerFactory.getLogger(FilmController.class);
     public HashMap<Long, Film> films = new HashMap<>();
 
     //Добавление фильма
+    @Override
     @PostMapping
     public Film create(@Valid @RequestBody Film film) {
-        validateFilm(film);
+        validateObj(film);
         long id = UtilForFilmController.createId(films);
         film.setId(id);
         films.put(id, film);
@@ -36,6 +36,7 @@ public class FilmController {
     }
 
     //Обновление фильма
+    @Override
     @PutMapping
     public Film update(@Valid @RequestBody Film film) {
         if (films.containsKey(film.getId())) {
@@ -52,14 +53,16 @@ public class FilmController {
     }
 
     //Получение всех данных
+    @Override
     @GetMapping
-    public List<Film> getAllFilms() {
+    public List<Film> getAllRecords() {
         List<Film> list = new ArrayList<Film>(films.values());
         return list;
     }
 
     //Валидация
-     void validateFilm(Film film) {
+    @Override
+     void validateObj(Film film) {
         if (film.getName().isBlank()) {
             throw new ValidationException("Пустое имя");
         }
