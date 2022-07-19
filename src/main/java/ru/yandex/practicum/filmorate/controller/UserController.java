@@ -9,7 +9,6 @@ import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.util.UtilForUserController;
 
 import javax.validation.Valid;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -63,19 +62,9 @@ public class UserController extends AbstractController <User> {
     //Валидация
     @Override
     void validateObj(User user) {
-        if (user.getEmail().isBlank() || !user.getEmail().contains("@")) {
-            throw new ValidationException("Не правильный email");
-        }
-        if (user.getLogin().isBlank()) {
-            throw new ValidationException("Логин пустой или содержит пробелы");
-        }
         if (user.getName().isBlank()) {
             user.setName(user.getLogin());
             log.info("У пользователя пустое имя, будет использоваться логин " + user.getLogin());
         }
-        if (user.getBirthday().isAfter(LocalDate.now())) {
-            throw new ValidationException("Дата рождения в будущем");
-        }
-
     }
 }

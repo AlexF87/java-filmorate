@@ -63,20 +63,10 @@ public class FilmController extends  AbstractController <Film> {
     //Валидация
     @Override
     void validateObj(Film film) {
-        if (film.getName().isBlank()) {
-            throw new ValidationException("Пустое имя");
-        }
-        if (film.getDescription().length() > 200) {
-            throw new ValidationException("Максикальное кол-во знаков 200");
-        }
         if (film.getReleaseDate().isBefore(LocalDate.of(1895,12,28))) {
             log.info("Фильм выходит за границы даты релиза");
             throw new ValidationException("Дата релиза раньше 28.12.1895");
         }
-        if (film.getDuration() < 0) {
-            throw new ValidationException("Отрицательная продолжительность");
-        }
-
     };
 
 }
