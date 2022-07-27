@@ -21,16 +21,15 @@ public class FilmController extends  AbstractController <Film> {
 
     //Создаем логер
     private final static Logger log = LoggerFactory.getLogger(FilmController.class);
-    public HashMap<Long, Film> films = new HashMap<>();
+
 
     //Добавление фильма
     @Override
     @PostMapping
     public Film create(@Valid @RequestBody Film film) {
         validateObj(film);
-        long id = UtilForFilmController.createId(films);
-        film.setId(id);
-        films.put(id, film);
+
+
         log.info("Фильм " + film.getName() + " создан.");
         return film;
     }
