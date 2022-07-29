@@ -4,7 +4,9 @@ import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.util.UtilForUserController;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 @Component
 public class InMemoryUserStorage implements UserStorage {
@@ -28,7 +30,16 @@ public class InMemoryUserStorage implements UserStorage {
 
     @Override
     public User update(User user) {
-        users.put(user.getId(), user);
+        User fromTheUserBase = users.get(user.getId());
+        fromTheUserBase.setEmail(user.getEmail());
+        fromTheUserBase.setLogin(user.getLogin());
+        fromTheUserBase.setName(user.getName());
+        fromTheUserBase.setBirthday(user.getBirthday());
+        users.put(user.getId(), fromTheUserBase);
         return users.get(user.getId());
+    }
+
+    public List<User> getAllRecords() {
+        return new ArrayList<User>(users.values());
     }
 }

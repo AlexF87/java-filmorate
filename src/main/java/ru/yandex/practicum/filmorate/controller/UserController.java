@@ -2,21 +2,24 @@ package ru.yandex.practicum.filmorate.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.filmorate.Exception.ValidationException;
+import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.util.UtilForUserController;
+import ru.yandex.practicum.filmorate.service.UserService;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 @Validated
 @RestController
 @RequestMapping("/users")
 public class UserController extends AbstractController <User> {
+
+    @Autowired
+    UserService userService;
 
     //Создаем логер
     private final static Logger log = LoggerFactory.getLogger(UserController.class);
@@ -27,34 +30,24 @@ public class UserController extends AbstractController <User> {
     @PostMapping
     public User create(@Valid @RequestBody User user) {
         validateObj(user);
-
+        User saved = userService.create(user);
         log.info("Пользователь " + user.getName() + " создан.");
-        return user;
+        return saved;
     }
 
     //Обновление пользователя
     @Override
     @PutMapping
     public User update(@Valid @RequestBody User user) {
-        if (users.containsKey(user.getId())) {
-            User fromTheUserBase = users.get(user.getId());
-            fromTheUserBase.setEmail(user.getEmail());
-            fromTheUserBase.setLogin(user.getLogin());
-            fromTheUserBase.setName(user.getName());
-            fromTheUserBase.setBirthday(user.getBirthday());
-            log.info("Пользователь обновлен");
-        } else {
-            throw new ValidationException("Ошибка при обновлении пользователя");
-        }
-        return user;
+        log.info("Пользователь обновлен");
+        return userService.update(user);
     }
 
     //Получение списка всех пользователей
     @Override
     @GetMapping
     public List<User> getAllRecords() {
-        List<User> list = new ArrayList<User>(users.values());
-        return list;
+       return userService.getAllRecords();
     }
 
     //Валидация
