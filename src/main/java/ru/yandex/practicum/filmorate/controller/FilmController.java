@@ -11,7 +11,6 @@ import ru.yandex.practicum.filmorate.service.FilmService;
 
 import javax.validation.Valid;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 @Validated
@@ -49,6 +48,31 @@ public class FilmController extends  AbstractController <Film> {
         return filmService.getAllRecords();
     }
 
+    //Получение фильма
+    @GetMapping("/{id}")
+    public Film getFilm(@PathVariable long id) {
+        return filmService.getFilm(id);
+    }
+
+    //Пользователь ставит лайк фильму
+    @PutMapping("/{id}/like/{userId}")
+    public void addLike(@PathVariable long id, @PathVariable long userId) {
+        filmService.addLike(id, userId);
+    }
+
+    //Пользователь удаляет лайк
+    @DeleteMapping("/{id}/like/{userId}")
+    public void deleteLike(@PathVariable long id, @PathVariable long userId) {
+        filmService.deleteLike(id, userId);
+    }
+
+    //Возвращает список из первых count фильмов
+    @GetMapping("/popular")
+    public List<Film> getListPopularFilms(@RequestParam(required = false, defaultValue = "10")
+                                              int count) {
+        return filmService.getListPopularFilms(count);
+    }
+
     //Валидация
     @Override
     void validateObj(Film film) {
@@ -56,6 +80,6 @@ public class FilmController extends  AbstractController <Film> {
             log.info("Фильм выходит за границы даты релиза");
             throw new ValidationException("Дата релиза раньше 28.12.1895");
         }
-    };
+    }
 
 }

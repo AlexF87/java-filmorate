@@ -4,9 +4,7 @@ import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.util.UtilForUserController;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 @Component
 public class InMemoryUserStorage implements UserStorage {
@@ -23,9 +21,7 @@ public class InMemoryUserStorage implements UserStorage {
 
     @Override
     public void delete(long id) {
-        if (users.containsKey(id)) {
             users.remove(id);
-        }
     }
 
     @Override
@@ -39,6 +35,12 @@ public class InMemoryUserStorage implements UserStorage {
         return users.get(user.getId());
     }
 
+    @Override
+    public User getUser(long id) {
+        return users.get(id);
+    }
+
+    @Override
     public List<User> getAllRecords() {
         return new ArrayList<User>(users.values());
     }

@@ -19,7 +19,7 @@ import java.util.List;
 public class UserController extends AbstractController <User> {
 
     @Autowired
-    UserService userService;
+    private UserService userService;
 
     //Создаем логер
     private final static Logger log = LoggerFactory.getLogger(UserController.class);
@@ -50,6 +50,34 @@ public class UserController extends AbstractController <User> {
        return userService.getAllRecords();
     }
 
+    @GetMapping("/{id}")
+    public User getUser(@PathVariable long id) {
+        return userService.getUser(id);
+    }
+    //Добавление в друзья
+    @PutMapping("/{id}/friends/{friendId}")
+    public void addFriend(@PathVariable long id, @PathVariable long friendId) {
+        userService.addFriend(id, friendId);
+    }
+
+    //Удаление из друзей
+    @DeleteMapping("/{id}/friends/{friendId}")
+    public void deleteFriend(@PathVariable long id, @PathVariable long friendId) {
+        userService.deleteFriend(id, friendId);
+    }
+
+    //Вывод друзей пользователя
+    @GetMapping("/{id}/friends")
+    public List<User> getFriendsOfUser(@PathVariable long id) {
+       return userService.getFriendsOfUser(id);
+    }
+
+    //Вывод общих друзей
+    @GetMapping("/{id}/friends/common/{otherId}")
+    public List<User> getListOfSharedFriendsUsers(@PathVariable long id, @PathVariable long otherId)
+    {
+        return userService.getListOfSharedFriendsUsers(id, otherId);
+    }
     //Валидация
     @Override
     void validateObj(User user) {
