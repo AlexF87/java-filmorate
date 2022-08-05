@@ -10,9 +10,12 @@ import ru.yandex.practicum.filmorate.model.User;
 
 import java.time.LocalDate;
 
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import ru.yandex.practicum.filmorate.service.UserService;
 
 @WebMvcTest
 class UserControllerTest {
@@ -22,7 +25,8 @@ class UserControllerTest {
 
     @Autowired
     private ObjectMapper objectMapper;
-
+    @Autowired
+    private UserService userService;
     @Test
     void validateFailEmail() throws Exception {
         User user = new User();

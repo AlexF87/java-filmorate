@@ -47,35 +47,41 @@ public class UserController extends AbstractController <User> {
     @Override
     @GetMapping
     public List<User> getAllRecords() {
-       return userService.getAllRecords();
+        log.info("Получаем список всех пользователей");
+        return userService.getAllRecords();
     }
 
     @GetMapping("/{id}")
     public User getUser(@PathVariable long id) {
+        log.info("Получаем пользователя id= " + id);
         return userService.getUser(id);
     }
     //Добавление в друзья
     @PutMapping("/{id}/friends/{friendId}")
     public void addFriend(@PathVariable long id, @PathVariable long friendId) {
+        log.info("У пользователя id" + id+ " и id= " + id + "дружба");
         userService.addFriend(id, friendId);
     }
 
     //Удаление из друзей
     @DeleteMapping("/{id}/friends/{friendId}")
     public void deleteFriend(@PathVariable long id, @PathVariable long friendId) {
+        log.info(String.format("удаление дружбы у пользователя id= %d, друг %d", id, friendId));
         userService.deleteFriend(id, friendId);
     }
 
     //Вывод друзей пользователя
     @GetMapping("/{id}/friends")
     public List<User> getFriendsOfUser(@PathVariable long id) {
-       return userService.getFriendsOfUser(id);
+        log.info("Вывополнен вывод друзей пользователя id= " + id);
+        return userService.getFriendsOfUser(id);
     }
 
     //Вывод общих друзей
     @GetMapping("/{id}/friends/common/{otherId}")
     public List<User> getListOfSharedFriendsUsers(@PathVariable long id, @PathVariable long otherId)
     {
+        log.info("Выполнен вывод общих друзей");
         return userService.getListOfSharedFriendsUsers(id, otherId);
     }
     //Валидация

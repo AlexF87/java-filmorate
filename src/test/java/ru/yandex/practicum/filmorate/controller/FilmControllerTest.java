@@ -8,6 +8,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.service.FilmService;
+import ru.yandex.practicum.filmorate.service.UserService;
+import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 
 import java.time.LocalDate;
 
@@ -18,11 +21,22 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(controllers = FilmController.class)
 class FilmControllerTest {
 
-    @Autowired
-    private MockMvc mockMvc;
 
+    private final MockMvc mockMvc;
+
+    private final ObjectMapper objectMapper;
+
+    private final FilmService filmService;
     @Autowired
-    private ObjectMapper objectMapper;
+    public FilmControllerTest(MockMvc mockMvc, ObjectMapper objectMapper, FilmService filmService, FilmStorage filmStorage) {
+        this.mockMvc = mockMvc;
+        this.objectMapper = objectMapper;
+        this.filmService = filmService;
+        this.filmStorage = filmStorage;
+    }
+
+    private final FilmStorage filmStorage;
+
 
     @Test
     void validateNameEmpty() throws Exception {
