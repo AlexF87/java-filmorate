@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
@@ -21,22 +22,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(controllers = FilmController.class)
 class FilmControllerTest {
 
-
-    private final MockMvc mockMvc;
-
-    private final ObjectMapper objectMapper;
-
-    private final FilmService filmService;
     @Autowired
-    public FilmControllerTest(MockMvc mockMvc, ObjectMapper objectMapper, FilmService filmService, FilmStorage filmStorage) {
-        this.mockMvc = mockMvc;
-        this.objectMapper = objectMapper;
-        this.filmService = filmService;
-        this.filmStorage = filmStorage;
-    }
-
-    private final FilmStorage filmStorage;
-
+    private  MockMvc mockMvc;
+    @Autowired
+    private  ObjectMapper objectMapper;
+    @MockBean
+    private  FilmService filmService;
 
     @Test
     void validateNameEmpty() throws Exception {
@@ -73,7 +64,7 @@ class FilmControllerTest {
 
     @Test
     void validateFailReleaseDate() {
-        FilmController filmController = new FilmController();
+        FilmController filmController = new FilmController(filmService);
         Film film = new Film();
         film.setName("ok");
         film.setDescription("asd");

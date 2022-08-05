@@ -1,8 +1,9 @@
 package ru.yandex.practicum.filmorate.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
@@ -15,11 +16,11 @@ import java.util.List;
 
 @Validated
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/films")
 public class FilmController extends  AbstractController <Film> {
 
-    @Autowired
-    FilmService filmService;
+    private final FilmService filmService;
 
     //Создаем логер
     private final static Logger log = LoggerFactory.getLogger(FilmController.class);

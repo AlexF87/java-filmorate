@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import ru.yandex.practicum.filmorate.model.User;
@@ -17,7 +18,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import ru.yandex.practicum.filmorate.service.UserService;
 
-@WebMvcTest
+@WebMvcTest(controllers = UserController.class)
 class UserControllerTest {
 
     @Autowired
@@ -25,7 +26,7 @@ class UserControllerTest {
 
     @Autowired
     private ObjectMapper objectMapper;
-    @Autowired
+    @MockBean
     private UserService userService;
     @Test
     void validateFailEmail() throws Exception {
@@ -61,7 +62,7 @@ class UserControllerTest {
 
     @Test
     void validateEmptyName() {
-        UserController userController = new UserController();
+        UserController userController = new UserController(userService);
         User user = new User();
         user.setEmail("asd@asd.ru");
         user.setLogin("AAA");

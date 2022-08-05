@@ -16,9 +16,13 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
+
 public class UserService {
     private final UserStorage inMemoryUserStorage;
+    @Autowired
+    public UserService(UserStorage inMemoryUserStorage) {
+        this.inMemoryUserStorage = inMemoryUserStorage;
+    }
 
     //Создание пользователя
     public User create(User user) {

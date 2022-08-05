@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,11 +16,11 @@ import java.util.List;
 
 @Validated
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/users")
 public class UserController extends AbstractController <User> {
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
     //Создаем логер
     private final static Logger log = LoggerFactory.getLogger(UserController.class);
