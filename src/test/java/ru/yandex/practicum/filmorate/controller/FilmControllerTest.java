@@ -12,6 +12,7 @@ import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.FilmService;
 import ru.yandex.practicum.filmorate.service.UserService;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
+import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
 import java.time.LocalDate;
 
@@ -26,8 +27,13 @@ class FilmControllerTest {
     private  MockMvc mockMvc;
     @Autowired
     private  ObjectMapper objectMapper;
+
     @MockBean
-    private  FilmService filmService;
+    private FilmService filmService;
+    @MockBean
+    private FilmStorage filmStorage;
+    @MockBean
+    private UserStorage userStorage;
 
     @Test
     void validateNameEmpty() throws Exception {
@@ -64,13 +70,13 @@ class FilmControllerTest {
 
     @Test
     void validateFailReleaseDate() {
-        FilmController filmController = new FilmController(filmService);
+        FilmService filmService = new FilmService(filmStorage, userStorage);
         Film film = new Film();
         film.setName("ok");
         film.setDescription("asd");
         film.setReleaseDate(LocalDate.of(1895, 12, 27));
         film.setDuration(10);
-        assertThrows(ValidationException.class, () -> filmController.validateObj(film));
+        assertThrows(ValidationException.class,  ()->filmService.validateObj(film));
     }
 
     @Test

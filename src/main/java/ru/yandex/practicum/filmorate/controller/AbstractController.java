@@ -15,5 +15,4 @@ public abstract T update(@Valid T obj);
 
 public abstract List<T> getAllRecords();
 
-abstract  void validateObj(T obj);
 }

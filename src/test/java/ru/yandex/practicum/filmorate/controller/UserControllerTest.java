@@ -17,6 +17,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import ru.yandex.practicum.filmorate.service.UserService;
+import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
 @WebMvcTest(controllers = UserController.class)
 class UserControllerTest {
@@ -26,8 +27,11 @@ class UserControllerTest {
 
     @Autowired
     private ObjectMapper objectMapper;
+
     @MockBean
     private UserService userService;
+    @MockBean
+    private UserStorage userStorage;
     @Test
     void validateFailEmail() throws Exception {
         User user = new User();
@@ -62,13 +66,13 @@ class UserControllerTest {
 
     @Test
     void validateEmptyName() {
-        UserController userController = new UserController(userService);
+        UserService userService = new UserService(userStorage);
         User user = new User();
         user.setEmail("asd@asd.ru");
         user.setLogin("AAA");
         user.setName("");
         user.setBirthday(LocalDate.of(1999, 01, 01));
-        userController.validateObj(user);
+        userService.validateObj(user);
 
         assertEquals("AAA", user.getName());
     }

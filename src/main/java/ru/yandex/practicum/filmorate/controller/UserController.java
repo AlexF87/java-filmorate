@@ -3,15 +3,12 @@ package ru.yandex.practicum.filmorate.controller;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.UserService;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.List;
 
 @Validated
@@ -30,7 +27,6 @@ public class UserController extends AbstractController <User> {
     @Override
     @PostMapping
     public User create(@Valid @RequestBody User user) {
-        validateObj(user);
         User saved = userService.create(user);
         log.info("Пользователь " + user.getName() + " создан.");
         return saved;
@@ -84,13 +80,5 @@ public class UserController extends AbstractController <User> {
     {
         log.info("Выполнен вывод общих друзей");
         return userService.getListOfSharedFriendsUsers(id, otherId);
-    }
-    //Валидация
-    @Override
-    void validateObj(User user) {
-        if (user.getName().isBlank()) {
-            user.setName(user.getLogin());
-            log.info("У пользователя пустое имя, будет использоваться логин " + user.getLogin());
-        }
     }
 }

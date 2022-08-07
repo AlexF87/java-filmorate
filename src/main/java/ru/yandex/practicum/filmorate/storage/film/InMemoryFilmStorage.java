@@ -5,7 +5,7 @@ import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.util.UtilForFilmController;
 
 import java.util.*;
-import java.util.stream.Collectors;
+
 
 @Component
 public class InMemoryFilmStorage implements FilmStorage{
