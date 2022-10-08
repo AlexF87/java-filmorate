@@ -1,0 +1,77 @@
+[33mcommit c72aac461db6ba231baadb3d0d5bc908ebbb62d2[m[33m ([m[1;36mHEAD -> [m[1;32madd-friends-likes[m[33m)[m
+Author: AlexF87 <feldman87@yandex.ru>
+Date:   Sun Aug 7 17:13:06 2022 +0700
+
+    fix: Удалить класс AbstractService, перенести валидацию на уровень сервиса
+
+[33mcommit 0a3589a0bbefd95638c116f3fef1d795b388766c[m[33m ([m[1;31morigin/add-friends-likes[m[33m)[m
+Author: AlexF87 <feldman87@yandex.ru>
+Date:   Sat Aug 6 00:08:04 2022 +0700
+
+    fix: Устранить ошибку в тестах
+
+[33mcommit 6d196d8a7e7144531d076f540363b6f57f7d7e3d[m
+Author: AlexF87 <feldman87@yandex.ru>
+Date:   Fri Aug 5 23:18:20 2022 +0700
+
+    Добавить ErrorHandler
+
+[33mcommit 7ebc5b79ad86330a0c3341bc781ee26b2a0dbf87[m
+Author: AlexF87 <feldman87@yandex.ru>
+Date:   Fri Aug 5 17:36:29 2022 +0700
+
+    Добваить новый функционал согласно ТЗ
+
+[33mcommit 95699bc95b5186e51cd42e61107389230c222908[m
+Author: AlexF87 <feldman87@yandex.ru>
+Date:   Fri Jul 29 17:40:52 2022 +0700
+
+    Добваить сервисы FilmService, UserService
+
+[33mcommit e8fd9416e4a9ba4ffe20ab93d8abfae782bd5deb[m
+Author: AlexF87 <feldman87@yandex.ru>
+Date:   Wed Jul 27 19:22:08 2022 +0700
+
+    Добавить хранилища InMemoryFilmStorage / UserStorage
+
+[33mcommit 72565b45ef97ee56c0bf5730fc0adc20f1cc1782[m[33m ([m[1;31morigin/controllers-films-users[m[33m, [m[1;32mmain[m[33m, [m[1;32mcontrollers-films-users[m[33m)[m
+Author: AlexF87 <feldman87@yandex.ru>
+Date:   Tue Jul 19 11:27:50 2022 +0700
+
+    fix: Переделать валидацию полей класса на аннотацию валидации
+
+[33mcommit 377de599097aa8a29501e4becf78541698e748f9[m
+Author: AlexF87 <feldman87@yandex.ru>
+Date:   Mon Jul 18 22:43:11 2022 +0700
+
+    delete: 'Удалить AbstractModel.class'
+
+[33mcommit 7c65c203a5ad52a223b68c0bea07cefa335e6f3f[m
+Author: AlexF87 <feldman87@yandex.ru>
+Date:   Mon Jul 18 20:19:04 2022 +0700
+
+    fix: Убрать аннотацию @Data и добавить @Getter, @Setter, @Constructor...
+
+[33mcommit a244113af991448d906d9c753e4d693f2228e589[m
+Author: AlexF87 <feldman87@yandex.ru>
+Date:   Mon Jul 18 17:00:54 2022 +0700
+
+    Применить абстрактные классы
+
+[33mcommit 1e94ee1b2584c238c6d5b3481244a2f8bb54de5c[m
+Author: AlexF87 <feldman87@yandex.ru>
+Date:   Sat Jul 16 18:32:42 2022 +0700
+
+    Разрабоатать приложение filmorate
+
+[33mcommit 12a34637bd92c779c9933eb9fbd2784288282907[m
+Author: AlexF87 <feldman87@yandex.ru>
+Date:   Mon Jul 11 15:21:34 2022 +0700
+
+    controllers-films-users
+
+[33mcommit a4b9675d59b990b9010dc98f0d4dd1a48ec2cde6[m[33m ([m[1;31morigin/main[m[33m)[m
+Author: AlexF87 <95345475+AlexF87@users.noreply.github.com>
+Date:   Fri Jul 8 20:06:21 2022 +0700
+
+    Initial commit
