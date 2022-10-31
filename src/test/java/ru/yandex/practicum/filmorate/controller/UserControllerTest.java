@@ -7,6 +7,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import ru.yandex.practicum.filmorate.dao.FriendsDao;
+import ru.yandex.practicum.filmorate.dao.UserDao;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.time.LocalDate;
@@ -17,7 +19,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import ru.yandex.practicum.filmorate.service.UserService;
-import ru.yandex.practicum.filmorate.storage.user.UserStorage;
+
 
 @WebMvcTest(controllers = UserController.class)
 class UserControllerTest {
@@ -31,7 +33,10 @@ class UserControllerTest {
     @MockBean
     private UserService userService;
     @MockBean
-    private UserStorage userStorage;
+    private UserDao userStorage;
+
+    @MockBean
+    private FriendsDao friendsDao;
     @Test
     void validateFailEmail() throws Exception {
         User user = new User();
@@ -66,7 +71,7 @@ class UserControllerTest {
 
     @Test
     void validateEmptyName() {
-        UserService userService = new UserService(userStorage);
+        UserService userService = new UserService(userStorage, friendsDao);
         User user = new User();
         user.setEmail("asd@asd.ru");
         user.setLogin("AAA");

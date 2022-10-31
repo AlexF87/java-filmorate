@@ -3,52 +3,46 @@ package ru.yandex.practicum.filmorate.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.filmorate.dao.FriendsDao;
+import ru.yandex.practicum.filmorate.dao.UserDao;
+import ru.yandex.practicum.filmorate.exception.IdNegativeException;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 
 public class UserService {
-    private final UserStorage inMemoryUserStorage;
+    private final UserDao userDao;
+    private final FriendsDao friendsDao;
+
     @Autowired
-    public UserService(UserStorage inMemoryUserStorage) {
-        this.inMemoryUserStorage = inMemoryUserStorage;
+    public UserService(UserDao userDao, FriendsDao friendsDao) {
+        this.userDao = userDao;
+        this.friendsDao = friendsDao;
     }
 
     //Создание пользователя
     public User create(User user) {
         validateObj(user);
-        return inMemoryUserStorage.create(user);
+        return userDao.createUser(user);
     }
 
     //Удаление пользователя
-    public void delete(long id) {
-        if (checkUserInStorage(id)) {
-            inMemoryUserStorage.delete(id);
+    public void deleteUser(long id) {
+        if (checkUserInDB(id)) {
+            userDao.deleteUser(id);
         } else {
             throw new NotFoundException("The user with id= " + id + " does not exist.");
         }
     }
 
-    public boolean checkUserInStorage(long id) {
-        final List<User> allRecords = inMemoryUserStorage.getAllRecords();
-        if (allRecords.stream().anyMatch(s->s.getId() == id)) {
-            return true;
-        } else {
-            return false;
-        }
-    }
     //Обновление пользователя
     public User update(User user) {
-        if (checkUserInStorage(user.getId())) {
-             return inMemoryUserStorage.update(user);
+        checkUserId(user.getId());
+        if (checkUserInDB(user.getId())) {
+             return userDao.updateUser(user);
         } else {
             throw new NotFoundException("the user with id= " + user.getId() + " does not exist.");
         }
@@ -56,76 +50,70 @@ public class UserService {
 
     //Получение всех пользователей
      public List<User> getAllRecords() {
-         return inMemoryUserStorage.getAllRecords();
+         return userDao.getAll();
      }
 
      //Получить пользователя
     public User getUser(long id) {
-        if (checkUserInStorage(id)) {
-            return inMemoryUserStorage.getUser(id);
+        checkUserId(id);
+        if (checkUserInDB(id)) {
+            return userDao.getUser(id);
         } else {
             throw new NotFoundException("The user with id= " + id + " does not exist.");
         }
     }
 
+    //Добавить в друзья
     public void addFriend(long id, long friendId) {
-        User user, friend;
-        if (checkUserInStorage(id) && checkUserInStorage(friendId)) {
-            user = inMemoryUserStorage.getUser(id);
-            friend = inMemoryUserStorage.getUser(friendId);
+        if (checkUserInDB(id) && checkUserInDB(friendId)) {
+            friendsDao.createFriend(id, friendId);
         } else {
             throw new NotFoundException("the user with id= " + id + "or " + friendId +
                     " does not exist.");
         }
-        user.getFriends().add(friend.getId());
-        friend.getFriends().add(user.getId());
     }
 
+    //Удалить из друзей
     public void deleteFriend(long id, long friendId) {
-        User user, friend;
-        if (checkUserInStorage(id) && checkUserInStorage(friendId)) {
-            user = inMemoryUserStorage.getUser(id);
-            friend = inMemoryUserStorage.getUser(friendId);
+        checkUserId(id);
+        checkUserId(friendId);
+        if (checkUserInDB(id) && checkUserInDB(friendId)) {
+            friendsDao.deleteFriend(id, friendId);
         } else {
             throw new NotFoundException("the user with id= " + id + "or " + friendId +
                     " does not exist.");
         }
-        Set<Long> userSet = new HashSet<>();
-        userSet.addAll(user.getFriends());
-        userSet.remove(friend.getId());
-        user.setFriends(userSet);
-        Set<Long> friendSet = new HashSet<>();
-        friendSet.addAll(friend.getFriends());
-        friendSet.remove(user.getId());
-        friend.setFriends(friendSet);
     }
 
+    //Получить друзей пользователя
     public List<User> getFriendsOfUser(long id) {
-        if (checkUserInStorage(id)) {
-            User user = inMemoryUserStorage.getUser(id);
-            List<User> list = new ArrayList<>();
-            list = user.getFriends().stream()
-                    .map(s->inMemoryUserStorage.getUser(s))
-                    .collect(Collectors.toList());
-            return list;
+        checkUserId(id);
+        if (checkUserInDB(id)) {
+            return friendsDao.getFriendsOfUser(id);
         } else {
             throw new NotFoundException("the user with id= " + id + " does not exist.");
         }
     }
 
+    //Получить общих друзей пользователей
     public List<User> getListOfSharedFriendsUsers(long id, long otherId) {
-        if (checkUserInStorage(id) && checkUserInStorage(otherId)) {
-            User user = inMemoryUserStorage.getUser(id);
-            User otherUser = inMemoryUserStorage.getUser(otherId);
-            List<User> list = new ArrayList<>();
-            list = user.getFriends().stream()
-                    .filter(s->otherUser.getFriends().contains(s) && s != otherUser.getId())
-                    .map(s->inMemoryUserStorage.getUser(s))
-                    .collect(Collectors.toList());
-            return list;
+        if (checkUserInDB(id) && checkUserInDB(otherId)) {
+            return friendsDao.getCommonsFriend(id, otherId);
         } else {
             throw new NotFoundException("the user with id= " + id + "or " + otherId +
                     " does not exist.");
+        }
+    }
+
+    //Проверка наличия пользователя в БД
+    public boolean checkUserInDB(long id) {
+        return userDao.checkUserInDB(id);
+    }
+
+    //Проверка id
+    private void checkUserId(long id) {
+        if (id < 0) {
+            throw new IdNegativeException("id должно быть положительным и больше 0");
         }
     }
 
