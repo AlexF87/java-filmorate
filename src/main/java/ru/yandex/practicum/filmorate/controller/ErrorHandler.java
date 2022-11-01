@@ -35,9 +35,9 @@ public class ErrorHandler {
         return new ErrorResponse((e.getMessage()));
     }
     @ExceptionHandler
-    @ResponseStatus(HttpStatus. NOT_FOUND)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse handleValidationException(final IdNegativeException e) {
-        log.info("Ошибка 404 {}", e.getMessage());
+        log.info("Ошибка 404 {}", e.getMessage(), e);
         return new ErrorResponse((e.getMessage()));
     }
 }

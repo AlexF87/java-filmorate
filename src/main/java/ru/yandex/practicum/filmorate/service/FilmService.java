@@ -32,7 +32,7 @@ public class FilmService {
     public Film create (Film film) {
         validateObj(film);
         film = filmDao.createFilm(film);
-        addGenreForFilm(film);
+        addGenreToFilm(film);
         return getFilm(film.getId());
     }
 
@@ -41,7 +41,7 @@ public class FilmService {
         checkFilmId(film.getId());
         if (checkFilmInDB(film.getId())) {
             filmDao.updateFilm(film);
-            film = addGenreForFilm(film);
+            film = addGenreToFilm(film);
             return getFilm(film.getId());
         } else {
             throw new NotFoundException("the film with id= " + film.getId() + " does not exist.");
@@ -51,15 +51,7 @@ public class FilmService {
     //Получение всех записей
     public List<Film> getAllRecords() {
         List<Film> films = filmDao.getAllFilms();
-        if(films != null && films.size() > 0) {
-            for (Film ob : films) {
-                List<Genre> genres = genreService.getFilmGenres(ob.getId());
-                if (genres.size() > 0) {
-                    ob.setGenres(genres);
-                }
-            }
-        }
-        return films;
+        return addGenresToFilms(films);
     }
 
     //Добавление лайка к фильму
@@ -89,7 +81,7 @@ public class FilmService {
     //Возвращает список из первых count фильмов
     public List<Film> getListPopularFilms(int count) {
         List<Film> sortedListForFilms = filmDao.getPopularFilms(count);
-        return sortedListForFilms;
+        return addGenresToFilms(sortedListForFilms);
     }
 
     //Возвращает фильм
@@ -125,7 +117,7 @@ public class FilmService {
         }
     }
 
-    private Film addGenreForFilm(Film film) {
+    private Film addGenreToFilm(Film film) {
         if (film.getGenres()!= null) {
             List<Genre> genresFilm = new ArrayList<>();
 
@@ -139,5 +131,17 @@ public class FilmService {
             film.setGenres(genres);
         }
         return film;
+    }
+
+    private List<Film> addGenresToFilms(List<Film> filmList) {
+        if(filmList != null && filmList.size() > 0) {
+            for (Film ob : filmList) {
+                List<Genre> genres = genreService.getFilmGenres(ob.getId());
+                if (genres.size() > 0) {
+                    ob.setGenres(genres);
+                }
+            }
+        }
+        return filmList;
     }
 }
