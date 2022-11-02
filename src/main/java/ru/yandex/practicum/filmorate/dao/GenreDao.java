@@ -21,4 +21,10 @@ public interface GenreDao {
 
     //Удалить у фильма жанр
     void deleteFilmGenres(Long filmId);
+
+    //Проверка наличия жанра у фильма
+    boolean checkGenreOfFilm(long id);
+
+    //Создание записи жанра-фильма в таблицу
+    void writeFilmGenres(Long filmId, Integer genresId);
 }

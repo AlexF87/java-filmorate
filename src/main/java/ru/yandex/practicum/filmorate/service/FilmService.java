@@ -10,8 +10,9 @@ import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.dao.FilmDao;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -28,11 +29,10 @@ public class FilmService {
     }
 
     //Создание фильма
-
     public Film create (Film film) {
         validateObj(film);
         film = filmDao.createFilm(film);
-        addGenreToFilm(film);
+        genreService.writeFilmGenres(film.getId(), film.getGenres());
         return getFilm(film.getId());
     }
 
@@ -41,7 +41,7 @@ public class FilmService {
         checkFilmId(film.getId());
         if (checkFilmInDB(film.getId())) {
             filmDao.updateFilm(film);
-            film = addGenreToFilm(film);
+            genreService.addFilmGenres(film.getId(), film.getGenres());
             return getFilm(film.getId());
         } else {
             throw new NotFoundException("the film with id= " + film.getId() + " does not exist.");
@@ -50,8 +50,15 @@ public class FilmService {
 
     //Получение всех записей
     public List<Film> getAllRecords() {
-        List<Film> films = filmDao.getAllFilms();
-        return addGenresToFilms(films);
+        List<Film> filmsAll = filmDao.getAllFilms();
+        List<Long> idFilms = filmsAll.stream().map(film -> film.getId()).collect(Collectors.toList());
+        Map<Long, List<Genre>> genres = genreService.addGenreToFilm(idFilms);
+        for (Film film : filmsAll) {
+            if (genres.get(film.getId()) != null) {
+                film.setGenres(genres.get(film.getId()));
+            }
+        }
+        return filmsAll;
     }
 
     //Добавление лайка к фильму
@@ -81,7 +88,14 @@ public class FilmService {
     //Возвращает список из первых count фильмов
     public List<Film> getListPopularFilms(int count) {
         List<Film> sortedListForFilms = filmDao.getPopularFilms(count);
-        return addGenresToFilms(sortedListForFilms);
+        List<Long> idFilms = sortedListForFilms.stream().map(film -> film.getId()).collect(Collectors.toList());
+        Map<Long, List<Genre>> genres = genreService.addGenreToFilm(idFilms);
+        for (Film film : sortedListForFilms) {
+            if (genres.get(film.getId()) != null) {
+                film.setGenres(genres.get(film.getId()));
+            }
+        }
+        return sortedListForFilms;
     }
 
     //Возвращает фильм
@@ -98,14 +112,20 @@ public class FilmService {
             throw new NotFoundException("the film with id= " + id + " does not exist.");
         }
     }
+
+    //Проверка id фильма
     private void checkFilmId(long id) {
         if (id < 0) {
             throw new FilmIdNegativeException("id должно быть положительным");
         }
     }
+
+    //Проверка наличия фильма в БД
     private boolean checkFilmInDB (Long id) {
         return filmDao.checkFilmInDB(id);
     }
+
+    //Проверка лайка пользователя
     private boolean checkLikeFromUser(Long userId, Long filmId) {
         return filmDao.checkLikeFromUser(userId, filmId);
     }
@@ -115,33 +135,5 @@ public class FilmService {
         if (film.getReleaseDate().isBefore(LocalDate.of(1895,12,28))) {
             throw new ValidationException("Дата релиза раньше 28.12.1895");
         }
-    }
-
-    private Film addGenreToFilm(Film film) {
-        if (film.getGenres()!= null) {
-            List<Genre> genresFilm = new ArrayList<>();
-
-            for (int i = 0; i < film.getGenres().size(); i++) {
-                genresFilm.add(genreService.getGenreById(film.getGenres().get(i).getId()));
-            }
-            genreService.addFilmGenres(film.getId(), genresFilm);
-            film.setGenres(genresFilm);
-        } else {
-            List<Genre> genres = new ArrayList<>();
-            film.setGenres(genres);
-        }
-        return film;
-    }
-
-    private List<Film> addGenresToFilms(List<Film> filmList) {
-        if(filmList != null && filmList.size() > 0) {
-            for (Film ob : filmList) {
-                List<Genre> genres = genreService.getFilmGenres(ob.getId());
-                if (genres.size() > 0) {
-                    ob.setGenres(genres);
-                }
-            }
-        }
-        return filmList;
     }
 }

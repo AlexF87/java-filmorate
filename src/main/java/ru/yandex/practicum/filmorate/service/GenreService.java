@@ -6,8 +6,8 @@ import ru.yandex.practicum.filmorate.dao.GenreDao;
 import ru.yandex.practicum.filmorate.exception.IdNegativeException;
 import ru.yandex.practicum.filmorate.model.Genre;
 
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
+
 @Service
 public class GenreService {
     private final GenreDao genreDao;
@@ -47,6 +47,34 @@ public class GenreService {
     private void checkGenreId(int id) {
         if (id < 0) {
             throw new IdNegativeException("id - must be positive and > 0");
+        }
+    }
+
+    //Добавление жанра к фильму
+    public Map<Long, List<Genre>> addGenreToFilm(List<Long> idFilm) {
+        Map<Long, List<Genre>> genres = new HashMap<>();
+
+        for(long id : idFilm) {
+            if (checkGenresOfFilm(id)) {
+                genres.put(id, getFilmGenres(id)) ;
+            } else {
+                genres.put(id, new ArrayList<Genre>());
+            }
+        }
+        return genres;
+    }
+
+    //Проверка наличия жанра у фильма
+    private boolean checkGenresOfFilm(long id) {
+        return genreDao.checkGenreOfFilm(id);
+    }
+
+    //Запись жанра-фильма в таблицу
+    public void writeFilmGenres(Long filmId, List<Genre> genres) {
+        deleteFilmGenres(filmId);
+        if (genres != null && genres.size() > 0) {
+            for (int i = 0; i < genres.size(); i++)
+            genreDao.writeFilmGenres(filmId, genres.get(i).getId());
         }
     }
 }

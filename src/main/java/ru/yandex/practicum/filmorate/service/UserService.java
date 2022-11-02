@@ -3,7 +3,6 @@ package ru.yandex.practicum.filmorate.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.filmorate.dao.FriendsDao;
 import ru.yandex.practicum.filmorate.dao.UserDao;
 import ru.yandex.practicum.filmorate.exception.IdNegativeException;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
@@ -12,15 +11,14 @@ import ru.yandex.practicum.filmorate.model.User;
 import java.util.List;
 
 @Service
-
 public class UserService {
     private final UserDao userDao;
-    private final FriendsDao friendsDao;
+    private final FriendsService friendsService;
 
     @Autowired
-    public UserService(UserDao userDao, FriendsDao friendsDao) {
+    public UserService(UserDao userDao, FriendsService friendsService) {
         this.userDao = userDao;
-        this.friendsDao = friendsDao;
+        this.friendsService = friendsService;
     }
 
     //Создание пользователя
@@ -66,7 +64,7 @@ public class UserService {
     //Добавить в друзья
     public void addFriend(long id, long friendId) {
         if (checkUserInDB(id) && checkUserInDB(friendId)) {
-            friendsDao.createFriend(id, friendId);
+            friendsService.createFriend(id, friendId);
         } else {
             throw new NotFoundException("the user with id= " + id + "or " + friendId +
                     " does not exist.");
@@ -78,7 +76,7 @@ public class UserService {
         checkUserId(id);
         checkUserId(friendId);
         if (checkUserInDB(id) && checkUserInDB(friendId)) {
-            friendsDao.deleteFriend(id, friendId);
+            friendsService.deleteFriend(id, friendId);
         } else {
             throw new NotFoundException("the user with id= " + id + "or " + friendId +
                     " does not exist.");
@@ -89,7 +87,7 @@ public class UserService {
     public List<User> getFriendsOfUser(long id) {
         checkUserId(id);
         if (checkUserInDB(id)) {
-            return friendsDao.getFriendsOfUser(id);
+            return friendsService.getFriendsOfUser(id);
         } else {
             throw new NotFoundException("the user with id= " + id + " does not exist.");
         }
@@ -98,7 +96,7 @@ public class UserService {
     //Получить общих друзей пользователей
     public List<User> getListOfSharedFriendsUsers(long id, long otherId) {
         if (checkUserInDB(id) && checkUserInDB(otherId)) {
-            return friendsDao.getCommonsFriend(id, otherId);
+            return friendsService.getCommonsFriend(id, otherId);
         } else {
             throw new NotFoundException("the user with id= " + id + "or " + otherId +
                     " does not exist.");

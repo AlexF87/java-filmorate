@@ -35,13 +35,15 @@ public class GenreDaoImpl implements GenreDao {
         return jdbcTemplate.query(sql, (rs, rowNum) -> makeGenre(rs, rowNum));
     }
 
-    //Добавить жанры к фильму
+    //Добавить в таблицу жанры фильма
     @Override
     public Collection<Genre> addFilmGenres(Long filmId, List<Genre> genres) {
         deleteFilmGenres(filmId);
-        for (int i = 0; i < genres.size(); i++) {
-            if (!checkGenreOfFilm(filmId, genres.get(i).getId())) {
-                addFilmGenres(filmId, genres.get(i).getId());
+        if(genres != null && genres.size() > 0) {
+            for (int i = 0; i < genres.size(); i++) {
+                if (!checkGenreOfFilm(filmId, genres.get(i).getId())) {
+                    writeFilmGenres(filmId, genres.get(i).getId());
+                }
             }
         }
         return genres;
@@ -71,8 +73,9 @@ public class GenreDaoImpl implements GenreDao {
         return quantity > 0;
     }
 
-    //Добавление фильму жанра
-    private void addFilmGenres(Long filmId, Integer genresId) {
+    //Создание записи жанра-фильма в таблицу
+    @Override
+    public void writeFilmGenres(Long filmId, Integer genresId) {
         String sql = "INSERT INTO films_genres (film_id, genres_id) VALUES (?, ?);";
         jdbcTemplate.update(sql, filmId, genresId);
     }
@@ -82,5 +85,13 @@ public class GenreDaoImpl implements GenreDao {
                 .id(resultSet.getInt("genre_id"))
                 .name(resultSet.getString("name_genre"))
                 .build();
+    }
+    @Override
+    public boolean checkGenreOfFilm(long id) {
+        String sqlQuery = "SELECT COUNT(genres_id) " +
+                "FROM films_genres " +
+                "WHERE film_id = ?;";
+        int count = jdbcTemplate.queryForObject(sqlQuery, Integer.class, id);
+        return 0 < count;
     }
 }
