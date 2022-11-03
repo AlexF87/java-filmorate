@@ -59,10 +59,11 @@ public class FriendsDaoImpl implements FriendsDao {
     //Получить общих друзей, между пользователями
     @Override
     public List<User> getCommonsFriend(long idFirst, long idSecond) {
-        String sql = "SELECT *  FROM users AS u " +
-                "JOIN " +
-                "(SELECT f.friend_id AS id FROM friends AS f WHERE f.user_id = ? INTERSECT " +
-                "SELECT f.friend_id AS id FROM friends AS f WHERE f.user_id = ? ) AS fr ON u.users_id = fr.id;";
+        String sql = "SELECT u.* FROM users as u " +
+                "JOIN (SELECT f.friend_id  FROM friends AS f " +
+                " JOIN (SELECT f.friend_id AS id FROM friends AS f WHERE f.user_id = ?) " +
+                "AS fr ON f.FRIEND_ID = fr.id WHERE f.user_id = ?) " +
+        "AS fr ON fr.FRIEND_ID = u.USERS_ID;";
         return jdbcTemplate.query(sql, (rs, rowNum) -> makeFriendsOfUser(rs, rowNum), idFirst, idSecond);
     }
 }

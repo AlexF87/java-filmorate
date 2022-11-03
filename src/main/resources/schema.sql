@@ -56,3 +56,4 @@ create table IF NOT EXISTS  FRIENDS
     user_id long references USERS(USERS_ID) ON DELETE CASCADE,
     friend_id long references USERS(USERS_ID) ON DELETE CASCADE
 );
+

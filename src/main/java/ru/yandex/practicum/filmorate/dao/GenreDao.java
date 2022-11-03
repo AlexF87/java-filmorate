@@ -27,4 +27,5 @@ public interface GenreDao {
 
     //Создание записи жанра-фильма в таблицу
     void writeFilmGenres(Long filmId, Integer genresId);
+
 }

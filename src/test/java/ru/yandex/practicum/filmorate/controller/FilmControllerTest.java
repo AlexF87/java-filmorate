@@ -11,6 +11,7 @@ import ru.yandex.practicum.filmorate.dao.FilmDao;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.FilmService;
+import ru.yandex.practicum.filmorate.service.FilmsGenresServiсe;
 import ru.yandex.practicum.filmorate.service.UserService;
 import ru.yandex.practicum.filmorate.service.GenreService;
 
@@ -37,6 +38,8 @@ class FilmControllerTest {
     private UserService userService;
     @MockBean
     private GenreService genreService;
+    @MockBean
+    private FilmsGenresServiсe filmsGenresServiсe;
 
     @Test
     void validateNameEmpty() throws Exception {
@@ -73,7 +76,7 @@ class FilmControllerTest {
 
     @Test
     void validateFailReleaseDate() {
-        FilmService filmService = new FilmService(filmDao, userService, genreService);
+        FilmService filmService = new FilmService(filmDao, userService, genreService, filmsGenresServiсe);
         Film film = new Film();
         film.setName("ok");
         film.setDescription("asd");

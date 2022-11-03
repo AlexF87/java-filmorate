@@ -9,7 +9,9 @@ import ru.yandex.practicum.filmorate.model.Genre;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Component
 public class GenreDaoImpl implements GenreDao {
@@ -86,6 +88,7 @@ public class GenreDaoImpl implements GenreDao {
                 .name(resultSet.getString("name_genre"))
                 .build();
     }
+
     @Override
     public boolean checkGenreOfFilm(long id) {
         String sqlQuery = "SELECT COUNT(genres_id) " +

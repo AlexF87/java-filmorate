@@ -38,7 +38,7 @@ public class FilmDaoImpl implements FilmDao {
             statement.setString(2, film.getDescription());
             statement.setDate(3, Date.valueOf(film.getReleaseDate()));
             statement.setInt(4, film.getDuration());
-            statement.setLong(5, film.getMpa().getId());
+            statement.setInt(5, film.getMpa().getId());
             return statement;
         }, keyHolder);
         film.setId(Objects.requireNonNull(keyHolder.getKey()).longValue());

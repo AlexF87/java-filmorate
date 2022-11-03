@@ -10,10 +10,9 @@ import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.dao.FilmDao;
 
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
-
 
 @Service
 public class FilmService {
@@ -21,11 +20,15 @@ public class FilmService {
     private final FilmDao filmDao;
     private final UserService userService;
     private final GenreService genreService;
+
+    private final FilmsGenresServiсe filmsGenresServiсe;
     @Autowired
-    public FilmService(FilmDao filmDao, UserService userService, GenreService genreService) {
+    public FilmService(FilmDao filmDao, UserService userService, GenreService genreService,
+                       FilmsGenresServiсe filmsGenresServiсe) {
         this.filmDao = filmDao;
         this.userService = userService;
         this.genreService = genreService;
+        this.filmsGenresServiсe = filmsGenresServiсe;
     }
 
     //Создание фильма
@@ -51,14 +54,17 @@ public class FilmService {
     //Получение всех записей
     public List<Film> getAllRecords() {
         List<Film> filmsAll = filmDao.getAllFilms();
-        List<Long> idFilms = filmsAll.stream().map(film -> film.getId()).collect(Collectors.toList());
-        Map<Long, List<Genre>> genres = genreService.addGenreToFilm(idFilms);
+        String idFilms = new String();
+        Map<Long, Film> films = new HashMap<>();
+
         for (Film film : filmsAll) {
-            if (genres.get(film.getId()) != null) {
-                film.setGenres(genres.get(film.getId()));
-            }
+            idFilms = idFilms +" "+ film.getId() + ",";
+            films.put(film.getId(), film);
         }
-        return filmsAll;
+        if (idFilms.length() > 0) {
+            idFilms = idFilms.substring(1, idFilms.length() - 1);
+        }
+        return filmsGenresServiсe.getGenresForGivenIds(idFilms, films);
     }
 
     //Добавление лайка к фильму
@@ -88,14 +94,19 @@ public class FilmService {
     //Возвращает список из первых count фильмов
     public List<Film> getListPopularFilms(int count) {
         List<Film> sortedListForFilms = filmDao.getPopularFilms(count);
-        List<Long> idFilms = sortedListForFilms.stream().map(film -> film.getId()).collect(Collectors.toList());
-        Map<Long, List<Genre>> genres = genreService.addGenreToFilm(idFilms);
+        Map<Long, Film> films = new HashMap<>();
+        String idFilms = new String();
+
         for (Film film : sortedListForFilms) {
-            if (genres.get(film.getId()) != null) {
-                film.setGenres(genres.get(film.getId()));
-            }
+            idFilms = idFilms +" "+ film.getId() + ",";
+            films.put(film.getId(), film);
         }
-        return sortedListForFilms;
+        if (idFilms.length() > 0) {
+            idFilms = idFilms.substring(1, idFilms.length() - 1);
+        }
+       return   filmsGenresServiсe.getGenresForGivenIds(idFilms, films);
+
+
     }
 
     //Возвращает фильм
