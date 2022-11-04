@@ -55,9 +55,10 @@ public class UserController extends AbstractController <User> {
     }
     //Добавление в друзья
     @PutMapping("/{id}/friends/{friendId}")
-    public void addFriend(@PathVariable long id, @PathVariable long friendId) {
-        log.info("У пользователя id" + id+ " и id= " + id + "дружба");
+    public User addFriend(@PathVariable long id, @PathVariable long friendId) {
+        log.info("У пользователя id" + id+ " и id= " + friendId + "дружба");
         userService.addFriend(id, friendId);
+        return userService.getUser(id);
     }
 
     //Удаление из друзей

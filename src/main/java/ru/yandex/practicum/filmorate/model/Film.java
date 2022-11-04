@@ -1,19 +1,18 @@
 package ru.yandex.practicum.filmorate.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Film {
 
     Long id;
@@ -28,7 +27,9 @@ public class Film {
 
     @Positive
     int duration;
+    @Positive
+    private Integer rate;
+    private List<Genre> genres;
+    private Mpa mpa;
 
-    @JsonIgnore
-    Set<Long> userLikes = new HashSet<>();
 }
