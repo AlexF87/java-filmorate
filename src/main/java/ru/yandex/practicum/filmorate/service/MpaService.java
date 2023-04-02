@@ -21,11 +21,10 @@ public class MpaService {
     //Получить рейтинг по id
     public Mpa getById(int id) {
         checkMpaId(id);
-        Mpa mpa = mpaDao.getMpa(id);
-        if (mpa == null) {
+        if (!mpaDao.checkMpaInDB(id)) {
             throw new NotFoundException("Not found mpa");
         }
-        return mpa;
+        return  mpaDao.getMpa(id);
     }
 
     //Получить все рейтинги

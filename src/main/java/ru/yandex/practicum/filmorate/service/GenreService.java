@@ -31,10 +31,10 @@ public class GenreService {
     //Получить жанр по id
     public Genre getGenreById(int id) {
         checkGenreId(id);
-        Genre genre = genreDao.getGenreById(id);
-        if (genre == null) {
+        if (!genreDao.checkGenreInDB(id)) {
             throw new NotFoundException("Not found genre");
         }
+        Genre genre = genreDao.getGenreById(id);
         return genre;
     }
 
