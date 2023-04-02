@@ -3,6 +3,14 @@
 # Это репозиторий проекта "FilmoRate"
 
 ---
+* Java 11 
+* Lombok
+* Spring Boot
+* JDBC
+* SQL
+* H2
+* Maven
+
 Приложение **умеет*:*
 1. Хранить Пользователей и Фильмы
 2. Методы:
@@ -24,9 +32,11 @@ SELECT * FROM users;
 SELECT * FROM users WHERE id=1;
 SELECT * FROM films;
 SELECT * FROM films WHERE id = 1;
-
+```
 ---
-Приложение написано на Java. Код примера: 
-```Java 
-public class Practicum {
-    public static void main(String[] args) {
+Запуск приложения
+```Cmd 
+1. mvn package
+2. cd filmorate/target
+3. java -jar filmorate-0.0.1-SNAPSHOT.jar
+```

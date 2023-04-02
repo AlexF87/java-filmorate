@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.dao.MpaDao;
 import ru.yandex.practicum.filmorate.exception.IdNegativeException;
+import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Mpa;
 
 import java.util.Collection;
@@ -20,7 +21,10 @@ public class MpaService {
     //Получить рейтинг по id
     public Mpa getById(int id) {
         checkMpaId(id);
-        return mpaDao.getMpa(id);
+        if (!mpaDao.checkMpaInDB(id)) {
+            throw new NotFoundException("Not found mpa");
+        }
+        return  mpaDao.getMpa(id);
     }
 
     //Получить все рейтинги

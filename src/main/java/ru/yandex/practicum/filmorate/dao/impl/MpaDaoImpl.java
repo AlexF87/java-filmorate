@@ -2,6 +2,7 @@ package ru.yandex.practicum.filmorate.dao.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.dao.MpaDao;
 import ru.yandex.practicum.filmorate.model.Mpa;
@@ -39,5 +40,16 @@ public class MpaDaoImpl implements MpaDao {
                 .id(resultSet.getInt("mpa_id"))
                 .name(resultSet.getString("rating_name"))
                 .build();
+    }
+
+    //Проверить mpa в БД
+    @Override
+    public boolean checkMpaInDB(int id) {
+        SqlRowSet mpaRows = jdbcTemplate.queryForRowSet("SELECT * FROM mpa_rating WHERE mpa_id = ?;", id);
+        if (mpaRows.next()) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

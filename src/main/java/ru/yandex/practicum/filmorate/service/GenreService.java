@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.dao.GenreDao;
 import ru.yandex.practicum.filmorate.exception.IdNegativeException;
+import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Genre;
 
 import java.util.*;
@@ -29,8 +30,12 @@ public class GenreService {
 
     //Получить жанр по id
     public Genre getGenreById(int id) {
-       checkGenreId(id);
-        return genreDao.getGenreById(id);
+        checkGenreId(id);
+        if (!genreDao.checkGenreInDB(id)) {
+            throw new NotFoundException("Not found genre");
+        }
+        Genre genre = genreDao.getGenreById(id);
+        return genre;
     }
 
     //Добавить список жанров заданного фильма
@@ -54,9 +59,9 @@ public class GenreService {
     public Map<Long, List<Genre>> addGenreToFilm(List<Long> idFilm) {
         Map<Long, List<Genre>> genres = new HashMap<>();
 
-        for(long id : idFilm) {
+        for (long id : idFilm) {
             if (checkGenresOfFilm(id)) {
-                genres.put(id, getFilmGenres(id)) ;
+                genres.put(id, getFilmGenres(id));
             } else {
                 genres.put(id, new ArrayList<Genre>());
             }
@@ -74,7 +79,7 @@ public class GenreService {
         deleteFilmGenres(filmId);
         if (genres != null && genres.size() > 0) {
             for (int i = 0; i < genres.size(); i++)
-            genreDao.writeFilmGenres(filmId, genres.get(i).getId());
+                genreDao.writeFilmGenres(filmId, genres.get(i).getId());
         }
     }
 }

@@ -28,4 +28,6 @@ public interface GenreDao {
     //Создание записи жанра-фильма в таблицу
     void writeFilmGenres(Long filmId, Integer genresId);
 
+    //Проверить genre в БД
+    boolean checkGenreInDB(int id);
 }

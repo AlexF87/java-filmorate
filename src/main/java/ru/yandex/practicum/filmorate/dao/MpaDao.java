@@ -11,4 +11,6 @@ public interface MpaDao {
 
     //Получить список жанров
     Collection<Mpa> getAll();
+
+    public boolean checkMpaInDB(int id);
 }

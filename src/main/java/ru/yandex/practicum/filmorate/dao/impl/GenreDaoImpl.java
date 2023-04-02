@@ -2,6 +2,7 @@ package ru.yandex.practicum.filmorate.dao.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.dao.GenreDao;
 import ru.yandex.practicum.filmorate.model.Genre;
@@ -41,7 +42,7 @@ public class GenreDaoImpl implements GenreDao {
     @Override
     public Collection<Genre> addFilmGenres(Long filmId, List<Genre> genres) {
         deleteFilmGenres(filmId);
-        if(genres != null && genres.size() > 0) {
+        if (genres != null && genres.size() > 0) {
             for (int i = 0; i < genres.size(); i++) {
                 if (!checkGenreOfFilm(filmId, genres.get(i).getId())) {
                     writeFilmGenres(filmId, genres.get(i).getId());
@@ -96,5 +97,16 @@ public class GenreDaoImpl implements GenreDao {
                 "WHERE film_id = ?;";
         int count = jdbcTemplate.queryForObject(sqlQuery, Integer.class, id);
         return 0 < count;
+    }
+
+    //Проверить genre в БД
+    @Override
+    public boolean checkGenreInDB(int id) {
+        SqlRowSet genreRows = jdbcTemplate.queryForRowSet("SELECT * FROM genres WHERE genre_id = ?;", id);
+        if (genreRows.next()) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }
